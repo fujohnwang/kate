@@ -2,10 +2,14 @@
 
 a fast and dirty java web framework
 
+# Prerequisites
+
+Java19+
+
 # License
 
 MIT
 
 # Credit
 
-to [FQ](https://afoo.me) @ [KEEVOL.com](https://keevol.com)
+to [WangFuqiang](https://afoo.me) @ [KEEVOL.com](https://keevol.com)
