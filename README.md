@@ -2,6 +2,8 @@
 
 a fast and dirty java web framework
 
+![](images/kate.png)
+
 # Prerequisites
 
 Java19+
