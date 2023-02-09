@@ -34,6 +34,13 @@ If you would like to use spring/springboot, annotate your `KateHandler`(s) with 
 > The order of `KateHandler`(s) matters!
 > That's why array(or list) is as bootstrap parameters' holder.
 
+# TIPS
+
+## Fancy transition to make MPA a SPA
+
+Although Kate is mainly for MPA(that's, multi-page applications), but you can still achieve SPA effect via js library, let's say, [Barba.js](https://barba.js.org/) 
+
+
 # License
 
 MIT
