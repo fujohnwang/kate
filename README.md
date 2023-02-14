@@ -38,7 +38,7 @@ If you would like to use spring/springboot, annotate your `KateHandler`(s) with 
 
 ## Fancy transition to make MPA a SPA
 
-Although Kate is mainly for MPA(that's, multi-page applications), but you can still achieve SPA effect via js library, let's say, [Barba.js](https://barba.js.org/) 
+Although Kate is mainly for MPA(that's, multi-page applications), but you can still achieve SPA effect via js library, let's say, [Barba.js](https://barba.js.org/) or [Swup](https://swup.js.org/)
 
 
 # License
