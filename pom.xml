@@ -14,7 +14,7 @@
         <java.version>19</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <vertx.version>4.3.6</vertx.version>
-        <jte.version>2.2.6</jte.version>
+        <jte.version>2.3.0</jte.version>
     </properties>
 
     <build>
@@ -26,13 +26,86 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
-                    <!--                    <generatedSourcesDirectory>jte-classes</generatedSourcesDirectory>-->
+                    <generatedSourcesDirectory>jte-classes</generatedSourcesDirectory>
                     <compilerArgs>
                         <arg>-parameters</arg>
                         <arg>--enable-preview</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>gg.jte</groupId>
+                <artifactId>jte-maven-plugin</artifactId>
+                <version>${jte.version}</version>
+                <configuration>
+                    <sourceDirectory>${basedir}/src/main/jte</sourceDirectory>
+                    <targetDirectory>jte-classes</targetDirectory>
+                    <contentType>Html</contentType>
+                    <binaryStaticContent>true</binaryStaticContent>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>app-src-gen</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>gen-clazz</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>precompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <!--                                    <directory>${basedir}/target/generated-sources/jte</directory>-->
+                                    <directory>${basedir}/jte-classes</directory>
+                                    <includes>
+                                        <include>**/*.bin</include>
+                                        <!--                                        <include>**/*.class</include>-->
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.keevol.kate.Kate</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -60,6 +133,15 @@
             <artifactId>slf4j-api</artifactId>
             <version>2.0.6</version>
         </dependency>
-
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
     </dependencies>
 </project>

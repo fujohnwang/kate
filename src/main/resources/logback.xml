@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%date{ISO8601} %-5level [%thread] %logger{32} - %message%n</pattern>
+        </layout>
+    </appender>
+
+    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME:-${user.dir}}/app.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME:-${user.dir}}/app-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize> <!--没有针对一天内最大文件数量的限制这样的功能支持-->
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level [%thread] %logger{32} - %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="fixedWindowAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME:-${user.dir}}/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_HOME:-${user.dir}}/app.%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>20</maxIndex> <!--private static int MAX_WINDOW_SIZE = 20 //最大20-->
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>100MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level [%thread] %logger{32} - %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="metrics" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="rollingFile"/>
+        <appender-ref ref="fixedWindowAppender"/>
+    </root>
+
+</configuration>

@@ -45,4 +45,8 @@ public class JteTemplateEngineFactory {
         }
         return templateEngineHolder.get();
     }
+
+    public static TemplateEngine create() {
+        return apply();
+    }
 }

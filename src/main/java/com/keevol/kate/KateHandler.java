@@ -22,5 +22,5 @@ import io.vertx.ext.web.RoutingContext;
  * [[https://www.keevol.com]]
  */
 public abstract class KateHandler implements Handler<RoutingContext> {
-    abstract String route();
+    public abstract String route();
 }

@@ -1,5 +1,11 @@
 package com.keevol.kate;
 
+import com.keevol.kate.handlers.AbstractPageHandler;
+import com.keevol.kate.handlers.SamplePageHandler;
+import com.keevol.kate.templates.jte.JteTemplateEngineFactory;
+import com.keevol.kate.templates.jte.JteTemplateUtils;
+import com.keevol.kate.utils.ResponseUtils;
+import gg.jte.TemplateEngine;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
@@ -8,10 +14,14 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -75,7 +85,8 @@ public class Kate {
                 Thread.ofVirtual().name("kate handler thread: " + virtualThreadCounter.getAndIncrement()).uncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
                     @Override
                     public void uncaughtException(Thread t, Throwable e) {
-                        logger.warn("uncaught exception in thread: " + t.getName() + ":\n" + e.getMessage());
+                        logger.warn("uncaught exception in thread: (" + t.getName() + "):\n" + ExceptionUtils.getStackTrace(e));
+                        ctx.response().setStatusCode(500).end();
                     }
                 }).start(() -> {
                     handler.handle(ctx);
@@ -133,6 +144,11 @@ public class Kate {
     }
 
     public static void main(String[] args) throws Throwable {
+
+        TemplateEngine te = JteTemplateEngineFactory.apply();
+
+        KateHandler pageHandler = new SamplePageHandler(te);
+
         KateHandler sampleHandler = new KateHandler() {
 
             @Override
@@ -141,11 +157,12 @@ public class Kate {
             }
 
             @Override
-            String route() {
+            public String route() {
                 return "/";
             }
         };
-        Kate kate = new Kate(new KateHandler[]{sampleHandler});
+
+        Kate kate = new Kate(new KateHandler[]{sampleHandler, pageHandler});
         kate.start("localhost", 9999);
         System.in.read();
         kate.stop();
