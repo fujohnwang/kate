@@ -135,11 +135,12 @@ public class Kate {
         });
         // handle body parse or file upload
         File uploadDir = new File(fileLocation);
-        if (!uploadDir.exists() && uploadDir.mkdirs()) {
-            router.route().handler(BodyHandler.create(true).setBodyLimit(5 * 1024 * 1024L).setUploadsDirectory(fileLocation));
-        } else {
-            throw new RuntimeException("fails to create file uploads directory at: " + uploadDir.getAbsolutePath());
+        if (!uploadDir.exists()) {
+            if (!uploadDir.mkdirs()) {
+                throw new RuntimeException("fails to create file uploads directory at: " + uploadDir.getAbsolutePath());
+            }
         }
+        router.route().handler(BodyHandler.create(true).setBodyLimit(5 * 1024 * 1024L).setUploadsDirectory(fileLocation));
     }
 
 
