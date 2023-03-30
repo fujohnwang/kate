@@ -18,6 +18,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +55,8 @@ public class Kate {
     protected Boolean clearPreflightRoutes = false;
     protected AtomicBoolean running = new AtomicBoolean(false);
     protected AtomicLong virtualThreadCounter = new AtomicLong(0);
+
+    private String fileLocation = "kate-uploads";
 
     public Kate(KateHandler[] handlers) {
         this.vertx = Vertx.vertx();
@@ -131,7 +134,12 @@ public class Kate {
             }
         });
         // handle body parse or file upload
-        router.route().handler(BodyHandler.create(true).setBodyLimit(5 * 1024 * 1024L));
+        File uploadDir = new File(fileLocation);
+        if (!uploadDir.exists() && uploadDir.mkdirs()) {
+            router.route().handler(BodyHandler.create(true).setBodyLimit(5 * 1024 * 1024L).setUploadsDirectory(fileLocation));
+        } else {
+            throw new RuntimeException("fails to create file uploads directory at: " + uploadDir.getAbsolutePath());
+        }
     }
 
 
@@ -167,5 +175,13 @@ public class Kate {
         System.in.read();
         kate.stop();
 
+    }
+
+    public String getFileLocation() {
+        return fileLocation;
+    }
+
+    public void setFileLocation(String fileLocation) {
+        this.fileLocation = fileLocation;
     }
 }
