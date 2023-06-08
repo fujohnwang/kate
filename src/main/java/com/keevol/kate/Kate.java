@@ -116,7 +116,6 @@ public class Kate {
     protected void preparePreflightRoutes(Router router) {
         // handle CORS issue
         router.route().handler(CorsHandler.create());
-
         router.route().handler(ctx -> {
             if (ctx.request().method().equals(HttpMethod.OPTIONS)) {
                 // CORS preflight request
