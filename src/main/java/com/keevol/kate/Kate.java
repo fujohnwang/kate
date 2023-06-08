@@ -52,7 +52,6 @@ public class Kate {
     protected HttpServer httpServer;
 
     protected Boolean implicitVertxCreated = false;
-    protected Boolean clearPreflightRoutes = false;
     protected AtomicBoolean running = new AtomicBoolean(false);
     protected AtomicLong virtualThreadCounter = new AtomicLong(0);
 
@@ -80,9 +79,7 @@ public class Kate {
 
     protected Future<HttpServer> doStart(String host, int port) {
         Router router = Router.router(vertx);
-        if (!clearPreflightRoutes) {
-            preparePreflightRoutes(router);
-        }
+        preparePreflightRoutes(router);
         for (KateHandler handler : this.handlers) {
             router.route(handler.route()).handler(ctx -> {
                 Thread.ofVirtual().name("kate handler thread: " + virtualThreadCounter.getAndIncrement()).uncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -118,12 +115,7 @@ public class Kate {
 
     protected void preparePreflightRoutes(Router router) {
         // handle CORS issue
-        router.route().handler(CorsHandler.create("*").
-                allowedMethod(HttpMethod.POST).
-                allowedMethod(HttpMethod.GET).
-                allowedMethod(HttpMethod.OPTIONS).
-                allowedHeaders(new java.util.HashSet<String>(java.util.Arrays.asList("Token", "Authorization", "Content-Type", "User-Agent", "If-Modified-Since", "Cache-Control", "Range"))).
-                exposedHeaders(new java.util.HashSet<String>(java.util.Arrays.asList("Content-Length", "Content-Range"))));
+        router.route().handler(CorsHandler.create());
 
         router.route().handler(ctx -> {
             if (ctx.request().method().equals(HttpMethod.OPTIONS)) {
@@ -133,6 +125,7 @@ public class Kate {
                 ctx.next();
             }
         });
+
         // handle body parse or file upload
         File uploadDir = new File(fileLocation);
         if (!uploadDir.exists()) {
@@ -141,15 +134,6 @@ public class Kate {
             }
         }
         router.route().handler(BodyHandler.create(true).setBodyLimit(5 * 1024 * 1024L).setUploadsDirectory(fileLocation));
-    }
-
-
-    public Boolean getClearPreflightRoutes() {
-        return clearPreflightRoutes;
-    }
-
-    public void setClearPreflightRoutes(Boolean clearPreflightRoutes) {
-        this.clearPreflightRoutes = clearPreflightRoutes;
     }
 
     public static void main(String[] args) throws Throwable {
