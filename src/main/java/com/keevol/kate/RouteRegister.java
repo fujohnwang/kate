@@ -20,6 +20,6 @@ import io.vertx.ext.web.Router;
  * Copyright 2017 © 杭州福强科技有限公司版权所有
  * [[https://www.keevol.com]]
  */
-public abstract class RouteRegister {
-    abstract void apply(Router router);
+public interface RouteRegister {
+    void apply(Router router);
 }

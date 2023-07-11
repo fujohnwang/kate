@@ -125,7 +125,7 @@ public class Kate {
 
         RouteRegister rr = new RouteRegister() {
             @Override
-            void apply(Router router) {
+            public void apply(Router router) {
                 router.get("/").handler(ctx -> ctx.response().end("DONE!"));
                 router.get("/page").handler(ctx -> {
                     Map<String, Object> templateContext = new HashMap<>();
@@ -133,8 +133,8 @@ public class Kate {
                     ResponseUtils.html(ctx, JteTemplateUtils.merge(te, "sample.jte", templateContext), 200);
                 });
             }
-        };
 
+        };
 
         Kate kate = new Kate(new RouteRegister[]{
                 rr
