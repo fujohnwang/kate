@@ -30,4 +30,10 @@ public class JteTemplateUtils {
         return output.toString();
     }
 
+    public static <T> String merge(TemplateEngine templateEngine, String jteTemplateFileName, T model) {
+        StringOutput output = new StringOutput();
+        templateEngine.render(jteTemplateFileName, model, output);
+        return output.toString();
+    }
+
 }

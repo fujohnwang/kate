@@ -13,8 +13,8 @@
     <properties>
         <java.version>20</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <vertx.version>4.4.3</vertx.version>
-        <jte.version>2.3.0</jte.version>
+        <vertx.version>4.4.4</vertx.version>
+        <jte.version>3.0.1</jte.version>
     </properties>
 
     <build>

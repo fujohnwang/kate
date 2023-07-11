@@ -1,10 +1,7 @@
 package com.keevol.kate;
 
-import com.keevol.kate.handlers.AbstractPageHandler;
 import com.keevol.kate.handlers.SamplePageHandler;
 import com.keevol.kate.templates.jte.JteTemplateEngineFactory;
-import com.keevol.kate.templates.jte.JteTemplateUtils;
-import com.keevol.kate.utils.ResponseUtils;
 import gg.jte.TemplateEngine;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -19,10 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -48,6 +41,7 @@ public class Kate {
     protected Logger logger = LoggerFactory.getLogger(Kate.class);
 
     protected KateHandler[] handlers;
+    protected RouteRegister[] routeRegisters;
     protected Vertx vertx;
     protected HttpServer httpServer;
 
@@ -58,14 +52,32 @@ public class Kate {
     private String fileLocation = "kate-uploads";
 
     public Kate(KateHandler[] handlers) {
-        this.vertx = Vertx.vertx();
+        this(Vertx.vertx(), handlers);
         this.implicitVertxCreated = true;
-        this.handlers = handlers;
+    }
+
+    /**
+     * 2 ways to offer route handlers:
+     *
+     * 1. KateHandler will be handled async with virtual thread by framework, so users don't need to care about the thread blocking things.
+     * 2. RouteRegister give more freedom to users, and they should handle thread blocking things by themselves, otherwise, the performance will suck.
+     *
+     * @param handlers
+     * @param routeRegisters
+     */
+    public Kate(KateHandler[] handlers, RouteRegister[] routeRegisters) {
+        this(Vertx.vertx(), handlers, routeRegisters);
+        this.implicitVertxCreated = true;
     }
 
     public Kate(Vertx vertx, KateHandler[] handlers) {
+        this(vertx, handlers, new RouteRegister[0]);
+    }
+
+    public Kate(Vertx vertx, KateHandler[] handlers, RouteRegister[] routeRegisters) {
         this.vertx = vertx;
         this.handlers = handlers;
+        this.routeRegisters = routeRegisters;
     }
 
     public Future<HttpServer> start(String host, int port) {
@@ -92,6 +104,9 @@ public class Kate {
                     handler.handle(ctx);
                 });
             });
+        }
+        for (RouteRegister routeRegister : this.routeRegisters) {
+            routeRegister.apply(router);
         }
         this.httpServer = vertx.createHttpServer();
         return httpServer.requestHandler(router).listen(port, host);

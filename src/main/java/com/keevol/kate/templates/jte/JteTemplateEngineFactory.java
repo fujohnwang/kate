@@ -36,7 +36,7 @@ public class JteTemplateEngineFactory {
             String profile = System.getProperty("profile");
             if (profile != null && (profile.equalsIgnoreCase("production") || profile.equalsIgnoreCase("prod"))) {
                 logger.info("profile=production, create Precompiled TemplateEngine for Jte.");
-                templateEngineHolder.set(TemplateEngine.createPrecompiled(ContentType.Html));
+                templateEngineHolder.set(TemplateEngine.createPrecompiled(Path.of("jte-classes"), ContentType.Html, JteTemplateEngineFactory.class.getClassLoader()));
             } else {
                 logger.info("profile is not production, so create hot-reloadable TemplateEngine for Jte in Development phase.");
                 DirectoryCodeResolver codeResolver = new DirectoryCodeResolver(Path.of("src", "main", "jte"));

@@ -1,9 +1,7 @@
 package com.keevol.kate.handlers;
 
-import com.keevol.kate.templates.jte.JteTemplateUtils;
 import com.keevol.kate.utils.ResponseUtils;
 import gg.jte.TemplateEngine;
-import gg.jte.runtime.Template;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.HashMap;

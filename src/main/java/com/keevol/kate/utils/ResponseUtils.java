@@ -2,7 +2,6 @@ package com.keevol.kate.utils;
 
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -25,8 +24,15 @@ import io.vertx.ext.web.RoutingContext;
  */
 public class ResponseUtils {
 
+    public static int DEFAULT_OK_STATUS_CODE = 200;
+    public static int DEFAULT_REDIRECT_STATUS_CODE = 302;
+
     public static void redirect(RoutingContext ctx, String toLocation) {
-        ctx.response().setStatusCode(303);
+        redirect(ctx, toLocation, DEFAULT_REDIRECT_STATUS_CODE);
+    }
+
+    public static void redirect(RoutingContext ctx, String toLocation, int statusCode) {
+        ctx.response().setStatusCode(statusCode);
         ctx.response().putHeader(HttpHeaders.LOCATION.toString(), toLocation);
         ctx.response().end();
     }
@@ -49,8 +55,13 @@ public class ResponseUtils {
         json(ctx, json, statusCode);
     }
 
+    public static void fail(RoutingContext ctx, String message) {
+        error(ctx, message, 500);
+    }
+
     public static void fail(RoutingContext ctx) {
-        error(ctx, "oops, 服务器出错啦~", 500);
+        ctx.response().setStatusCode(500);
+        ctx.response().end();
     }
 
 }

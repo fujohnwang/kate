@@ -2,7 +2,9 @@ package com.keevol.kate.handlers;
 
 import com.keevol.kate.KateHandler;
 import com.keevol.kate.templates.jte.JteTemplateUtils;
+import com.keevol.kate.utils.ResponseUtils;
 import gg.jte.TemplateEngine;
+import io.vertx.ext.web.RoutingContext;
 
 import java.util.Map;
 
@@ -32,7 +34,15 @@ public abstract class AbstractPageHandler extends KateHandler {
         this.templateEngine = templateEngine;
     }
 
+    public <T> void html(RoutingContext ctx, String templateFile, T model) {
+        ResponseUtils.html(ctx, JteTemplateUtils.merge(templateEngine, templateFile, model), 200);
+    }
+
     public String render(String templateFile, Map<String, Object> model) {
+        return JteTemplateUtils.merge(templateEngine, templateFile, model);
+    }
+
+    public <T> String render(String templateFile, T model) {
         return JteTemplateUtils.merge(templateEngine, templateFile, model);
     }
 }
