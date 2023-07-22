@@ -30,6 +30,11 @@ public class AsyncHandler implements Handler<RoutingContext> {
 
     private Handler<RoutingContext> handler;
 
+    /**
+     * asynchandler层面的抽象有问题，应该是受到当时playframework的设计影响，其实完全没必要在这个粒度做
+     * @deprecated see {@link Async} instead.
+     * @param handler
+     */
     public AsyncHandler(Handler<RoutingContext> handler) {
         this.handler = handler;
     }
