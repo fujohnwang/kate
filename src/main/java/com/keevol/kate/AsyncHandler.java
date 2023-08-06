@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Copyright 2017 © 杭州福强科技有限公司版权所有
  * [[https://www.keevol.com]]
+ *
+ * @deprecated turn to {@link  com.keevol.kate.utils.Async} instead. Since virtual thread + vert.x cause problems and is unstable for the time being.
  */
 public class AsyncHandler implements Handler<RoutingContext> {
 
