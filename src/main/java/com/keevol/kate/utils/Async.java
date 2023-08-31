@@ -51,6 +51,7 @@ public class Async {
             // Async {
             //  do anything with ctx.
             // }
+            // or Future {..} directly.
         };
     }
 }
