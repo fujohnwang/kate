@@ -11,7 +11,7 @@
     <url>https://www.keevol.com</url>
 
     <properties>
-        <java.version>20</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <vertx.version>4.4.5</vertx.version>
         <jte.version>3.0.1</jte.version>
@@ -29,7 +29,7 @@
                     <generatedSourcesDirectory>jte-classes</generatedSourcesDirectory>
                     <compilerArgs>
                         <arg>-parameters</arg>
-                        <arg>--enable-preview</arg>
+<!--                        <arg>&#45;&#45;enable-preview</arg>-->
                         <arg>-Xlint:deprecation</arg>
                         <arg>-Xlint:preview</arg>
                     </compilerArgs>
