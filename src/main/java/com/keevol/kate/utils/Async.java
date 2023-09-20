@@ -2,6 +2,7 @@ package com.keevol.kate.utils;
 
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,18 @@ public class Async {
 
     public static void run(Runnable r) {
         executor.execute(r);
+    }
+
+    public static void runV(Runnable r) {
+        Thread.ofVirtual()
+                .name("Async execution with virtual thread")
+                .uncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+                    @Override
+                    public void uncaughtException(Thread t, Throwable e) {
+                        logger.warn("uncaughtException in virtual thread:{} from kate web handler: {}", t.getName(), ExceptionUtils.getStackTrace(e));
+                    }
+                })
+                .start(r);
     }
 
     // syntax sugar of scala will make this easy: Async.apply(r:=>Unit)
