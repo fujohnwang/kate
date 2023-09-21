@@ -1,9 +1,5 @@
 package com.keevol.kate;
 
-import com.keevol.kate.templates.jte.JteTemplateEngineFactory;
-import com.keevol.kate.templates.jte.JteTemplateUtils;
-import com.keevol.kate.utils.ResponseUtils;
-import gg.jte.TemplateEngine;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
@@ -15,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -121,17 +115,17 @@ public class Kate {
 
     public static void main(String[] args) throws Throwable {
 
-        TemplateEngine te = JteTemplateEngineFactory.apply();
+//        TemplateEngine te = JteTemplateEngineFactory.apply();
 
         RouteRegister rr = new RouteRegister() {
             @Override
             public void apply(Router router) {
                 router.get("/").handler(ctx -> ctx.response().end("DONE!"));
-                router.get("/page").handler(ctx -> {
-                    Map<String, Object> templateContext = new HashMap<>();
-                    templateContext.put("message", "Hello, Kate.");
-                    ResponseUtils.html(ctx, JteTemplateUtils.merge(te, "sample.jte", templateContext), 200);
-                });
+//                router.get("/page").handler(ctx -> {
+//                    Map<String, Object> templateContext = new HashMap<>();
+//                    templateContext.put("message", "Hello, Kate.");
+//                    ResponseUtils.html(ctx, JteTemplateUtils.merge(te, "sample.jte", templateContext), 200);
+//                });
             }
 
         };

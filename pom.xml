@@ -14,7 +14,6 @@
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <vertx.version>4.4.5</vertx.version>
-        <jte.version>3.0.1</jte.version>
     </properties>
 
     <build>
@@ -34,34 +33,6 @@
                         <arg>-Xlint:preview</arg>
                     </compilerArgs>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>gg.jte</groupId>
-                <artifactId>jte-maven-plugin</artifactId>
-                <version>${jte.version}</version>
-                <configuration>
-                    <sourceDirectory>${basedir}/src/main/jte</sourceDirectory>
-                    <targetDirectory>jte-classes</targetDirectory>
-                    <contentType>Html</contentType>
-                    <binaryStaticContent>true</binaryStaticContent>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>app-src-gen</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>gen-clazz</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>precompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
@@ -93,21 +64,6 @@
                 </executions>
             </plugin>
 
-<!--             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>com.keevol.kate.Kate</mainClass>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin> -->
-
         </plugins>
     </build>
 
@@ -122,12 +78,6 @@
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web</artifactId>
             <version>${vertx.version}</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/gg.jte/jte -->
-        <dependency>
-            <groupId>gg.jte</groupId>
-            <artifactId>jte</artifactId>
-            <version>${jte.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
