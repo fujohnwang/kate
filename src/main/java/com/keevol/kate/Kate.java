@@ -4,6 +4,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
@@ -71,8 +72,15 @@ public class Kate {
         for (RouteRegister routeRegister : this.routeRegisters) {
             routeRegister.apply(router);
         }
-        this.httpServer = vertx.createHttpServer();
+
+        HttpServerOptions httpServerOptions = new HttpServerOptions();
+        customizeHttpServerOptions(httpServerOptions);
+        this.httpServer = vertx.createHttpServer(httpServerOptions);
         return httpServer.requestHandler(router).listen(port, host);
+    }
+
+    protected void customizeHttpServerOptions(HttpServerOptions httpServerOptions) {
+        // you can override this method to customize http server options
     }
 
 
