@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -40,6 +41,7 @@ public class Kate {
 
     protected RouteRegister[] routeRegisters;
     protected Vertx vertx;
+    protected Router router;
     protected HttpServer httpServer;
 
     protected Boolean implicitVertxCreated = false;
@@ -78,6 +80,7 @@ public class Kate {
 
     protected Future<HttpServer> doStart(String host, int port) {
         Router router = Router.router(vertx);
+        this.router = router;
         preparePreflightRoutes(router);
         for (RouteRegister routeRegister : this.routeRegisters) {
             routeRegister.apply(router);
@@ -129,6 +132,10 @@ public class Kate {
             }
         }
         router.route().handler(BodyHandler.create(true).setBodyLimit(5 * 1024 * 1024L).setUploadsDirectory(fileLocation));
+    }
+
+    public Router getRouter() {
+        return this.router;
     }
 
     public static void main(String[] args) throws Throwable {
