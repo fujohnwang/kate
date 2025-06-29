@@ -86,8 +86,7 @@ public class Kate {
     }
 
     protected Future<HttpServer> doStart(String host, int port) {
-        Router router = Router.router(vertx);
-        this.router = router;
+        this.router = Router.router(vertx);
 
         if (enablePreflightHandlers.get()) {
             preparePreflightRoutes(router);
