@@ -46,20 +46,27 @@ public class Kate {
 
     protected Boolean implicitVertxCreated = false;
     protected AtomicBoolean running = new AtomicBoolean(false);
+    protected AtomicBoolean enablePreflightHandlers = new AtomicBoolean(true);
     protected AtomicLong virtualThreadCounter = new AtomicLong(0);
 
     private String fileLocation = "kate-uploads";
 
+    public static Kate of(RouteRegister... routeRegisters) {
+        return new Kate(routeRegisters);
+    }
+
     public Kate(Function<Router, Void> routeRegister) {
-        this(new RouteRegister() {
-            @Override
-            public void apply(Router router) {
-                routeRegister.apply(router);
-            }
+        this(new RouteRegister[]{
+                new RouteRegister() {
+                    @Override
+                    public void apply(Router router) {
+                        routeRegister.apply(router);
+                    }
+                }
         });
     }
 
-    public Kate(RouteRegister... routeRegisters) {
+    public Kate(RouteRegister[] routeRegisters) {
         this(Vertx.vertx(), routeRegisters);
         this.implicitVertxCreated = true;
     }
@@ -81,7 +88,11 @@ public class Kate {
     protected Future<HttpServer> doStart(String host, int port) {
         Router router = Router.router(vertx);
         this.router = router;
-        preparePreflightRoutes(router);
+
+        if (enablePreflightHandlers.get()) {
+            preparePreflightRoutes(router);
+        }
+
         for (RouteRegister routeRegister : this.routeRegisters) {
             routeRegister.apply(router);
         }
@@ -114,7 +125,7 @@ public class Kate {
 
     protected void preparePreflightRoutes(Router router) {
         // handle CORS issue
-        router.route().handler(CorsHandler.create());
+        router.route().handler(CorsHandler.create().addOrigin("*"));
         router.route().handler(ctx -> {
             if (ctx.request().method().equals(HttpMethod.OPTIONS)) {
                 // CORS preflight request
@@ -134,6 +145,10 @@ public class Kate {
         router.route().handler(BodyHandler.create(true).setBodyLimit(5 * 1024 * 1024L).setUploadsDirectory(fileLocation));
     }
 
+    public void setEnablePreflightHandlers(boolean flag) {
+        this.enablePreflightHandlers.set(flag);
+    }
+
     public Router getRouter() {
         return this.router;
     }
@@ -145,12 +160,14 @@ public class Kate {
         RouteRegister rr = new RouteRegister() {
             @Override
             public void apply(Router router) {
-                router.get("/").handler(ctx -> ctx.response().end("DONE!"));
-//                router.get("/page").handler(ctx -> {
+                router.route("/").handler(ctx -> ctx.response().end("DONE!"));
+                router.get("/page").handler(ctx -> {
+                    ctx.response().end("page test route");
 //                    Map<String, Object> templateContext = new HashMap<>();
 //                    templateContext.put("message", "Hello, Kate.");
 //                    ResponseUtils.html(ctx, JteTemplateUtils.merge(te, "sample.jte", templateContext), 200);
-//                });
+                });
+                router.get("/sss").handler(ctx -> ctx.response().end("ssss"));
             }
 
         };
