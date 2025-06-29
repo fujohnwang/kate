@@ -12,8 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 /**
  * {{{
@@ -46,8 +48,16 @@ public class Kate {
 
     private String fileLocation = "kate-uploads";
 
+    public Kate(Function<Router, Void> routeRegister) {
+        this(new RouteRegister() {
+            @Override
+            public void apply(Router router) {
+                routeRegister.apply(router);
+            }
+        });
+    }
 
-    public Kate(RouteRegister[] routeRegisters) {
+    public Kate(RouteRegister... routeRegisters) {
         this(Vertx.vertx(), routeRegisters);
         this.implicitVertxCreated = true;
     }
