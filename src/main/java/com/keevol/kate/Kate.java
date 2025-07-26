@@ -12,11 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 /**
  * {{{
@@ -55,12 +53,12 @@ public class Kate {
         return new Kate(routeRegisters);
     }
 
-    public Kate(Function<Router, Void> routeRegister) {
+    public Kate(Consumer<Router> routeRegister) {
         this(new RouteRegister[]{
                 new RouteRegister() {
                     @Override
                     public void apply(Router router) {
-                        routeRegister.apply(router);
+                        routeRegister.accept(router);
                     }
                 }
         });
