@@ -14,7 +14,7 @@
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 <!--        <vertx.version>4.5.14</vertx.version>-->
-        <vertx.version>5.0.1</vertx.version>
+        <vertx.version>5.0.3</vertx.version>
     </properties>
 
     <build>
